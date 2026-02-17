@@ -4,18 +4,16 @@ import css from "./NotesPage.module.css";
 import { useState } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useDebouncedCallback } from "use-debounce";
+import Link from "next/link";
 
 import SearchBox from "@/components/SearchBox/SearchBox";
 import Pagination from "@/components/Pagination/Pagination";
 import NoteList from "@/components/NoteList/NoteList";
-import NoteForm from "@/components/NoteForm/NoteForm";
-import Modal from "@/components/Modal/Modal";
 import { fetchNotes } from "@/lib/api";
 
 export default function NotesFilteredClient({ tag }: { tag?: string }) {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [modal, setModal] = useState(false);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["notes", tag, search, page],
@@ -35,7 +33,6 @@ export default function NotesFilteredClient({ tag }: { tag?: string }) {
     <div className={css.app}>
       <header className={css.toolbar}>
         <SearchBox value={search} onChange={onChange} />
-
         <div className={css.paginationWrap}>
           {data && data.totalPages > 1 && (
             <Pagination
@@ -45,21 +42,14 @@ export default function NotesFilteredClient({ tag }: { tag?: string }) {
             />
           )}
         </div>
-
-        <button onClick={() => setModal(true)} className={css.createBtn}>
+        <Link href="/notes/action/create" className={css.createBtn}>
           Create note +
-        </button>
+        </Link>
       </header>
 
       {isLoading && <p>Loading, please wait...</p>}
       {isError && <p>Something went wrong.</p>}
       {!isLoading && !isError && notes.length > 0 && <NoteList notes={notes} />}
-
-      {modal && (
-        <Modal onClose={() => setModal(false)}>
-          <NoteForm onClose={() => setModal(false)} />
-        </Modal>
-      )}
     </div>
   );
 }

@@ -14,7 +14,7 @@
 }
 
 .listItem {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.69);
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 14px;
 
